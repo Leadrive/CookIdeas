@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import ReactNative, {
-	Text,
 	Button,
-	WebView
+	Text,
+	WebView,
 } from 'react-native'
 import {connect} from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -41,6 +41,7 @@ class Recipe extends Component{
 		return (
 			<WebView
 				source={{uri:params.recipe.href}}
+				startInLoadingState={true}
 			/>
 		)
 	}
