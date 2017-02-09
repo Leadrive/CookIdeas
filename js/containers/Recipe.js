@@ -6,7 +6,6 @@ import ReactNative, {
 } from 'react-native'
 import {connect} from 'react-redux'
 import { bindActionCreators } from 'redux'
-import Icon from 'react-native-vector-icons/EvilIcons'
 import { ActionCreators } from '../actions'
 
 function toggle(recipe){

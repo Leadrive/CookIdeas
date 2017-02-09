@@ -10,7 +10,7 @@ import ReactNative, {
 } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import Icon from 'react-native-vector-icons/EvilIcons'
+import Icon from 'react-native-vector-icons/FontAwesome'
 import { ActionCreators } from '../actions'
 
 const ds = new ListView.DataSource({
@@ -25,7 +25,7 @@ class Favorites extends Component{
 		tabBar:{
 			label:'Favorites',
 			icon:({tintColor})=>(
-				<Icon name='star' size={36} color={tintColor} />
+				<Icon name='star-o' size={24} color={tintColor} />
 			)
 		}
 	}
@@ -81,8 +81,7 @@ const styles= StyleSheet.create({
 	result:{
 		flex:1,
 		flexDirection:'row',
-		borderTopColor:'#ccc',
-		borderTopWidth:1,
+		paddingVertical:2
 	},
 	resultImage:{
 		width:120,
@@ -98,7 +97,7 @@ const styles= StyleSheet.create({
 		flex:1,
 		flexShrink:1,
 		flexDirection:'column',
-		justifyContent: 'space-between',
+		justifyContent: 'space-around',
 		padding:5
 	},
 	resultInfoTitle:{

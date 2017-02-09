@@ -12,7 +12,7 @@ import ReactNative, {
 } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import Icon from 'react-native-vector-icons/EvilIcons'
+import Icon from 'react-native-vector-icons/FontAwesome'
 import { ActionCreators } from '../actions'
 
 const ds = new ListView.DataSource({
@@ -27,7 +27,7 @@ class Search extends Component{
 		tabBar:{
 			label:'Search',
 			icon:({tintColor})=>(
-				<Icon name='search' size={36} color={tintColor} />
+				<Icon name='search' size={24} color={tintColor} />
 			)
 		}
 	}
@@ -41,6 +41,7 @@ class Search extends Component{
 		this.props.fetchRecipes(...this.state.ingredientsInput.split(',')).then(()=>{
 			this.setState({searching:false})
 		})
+		Keyboard.dismiss()
 	}
 	render(){
 		const favorites=this.props.favorites
@@ -54,14 +55,18 @@ class Search extends Component{
 				<View style={styles.searchSection}>
 					<TextInput
 						style={styles.searchInput}
+						autoFocus={true}
+						editable={true}
 						returnKeyType='search'
 						placeholder='Ingredients (comma delimited)'
 						onChangeText={(ingredientsInput)=>this.setState({ingredientsInput})}
-						onSubmitEditing={Keyboard.dismiss}
+						onSubmitEditing={()=>this.searchPressed()}
 					/>
-					<TouchableHighlight onPress={()=>this.searchPressed()} style={styles.searchButton}>
-						<Text>Search</Text>
+					<View style={styles.searchButton}>
+					<TouchableHighlight onPress={()=>this.searchPressed()}>
+						<Icon name='search' size={24} color='#007aff' />
 					</TouchableHighlight>
+					</View>
 				</View>
 				<View style={styles.searchStatus}>{count}</View>
 				<ListView
@@ -71,7 +76,9 @@ class Search extends Component{
 					renderRow={(row)=>{
 						const href=row.href
 						const idx=favorites.findIndex(function(recipe){return recipe.href===href})
-						const tintColor=idx>-1?'orange':'grey'
+						const star=idx>-1 ?
+							<Icon name='star' size={24} color='orange' />:
+							<Icon name='star-o' size={24} color='grey' />
 						return (
 						<TouchableHighlight key={href} onPress={()=>{
 							this.props.navigation.navigate('Recipe',{recipe:row})
@@ -92,7 +99,7 @@ class Search extends Component{
 								</View>
 								<View style={styles.resultFavorite}>
 								<TouchableWithoutFeedback onPress={()=>this.props.toggleFavorite(row)}>
-									<Icon name='star' size={24} color={tintColor} />
+									{star}
 								</TouchableWithoutFeedback>
 								</View>
 							</View>
@@ -113,12 +120,15 @@ const styles= StyleSheet.create({
 		borderBottomColor:'#ccc',
 		borderBottomWidth:1,
 		padding:5,
+		height:48
 	},
 	searchInput:{
-		flex:0.8,
+		flex:1,
+		flexShrink:1
 	},
 	searchButton:{
-		flex:0.2,
+		width:64,
+		justifyContent: 'center',
 		alignItems:'center'
 	},
 	searchStatus:{
@@ -132,8 +142,7 @@ const styles= StyleSheet.create({
 	result:{
 		flex:1,
 		flexDirection:'row',
-		borderTopColor:'#ccc',
-		borderTopWidth:1,
+		paddingVertical:2
 	},
 	resultImage:{
 		width:120,
@@ -149,7 +158,7 @@ const styles= StyleSheet.create({
 		flex:1,
 		flexShrink:1,
 		flexDirection:'column',
-		justifyContent: 'space-between',
+		justifyContent: 'space-around',
 		padding:5
 	},
 	resultInfoTitle:{

@@ -9,7 +9,6 @@ import {
 import {
 	Button
 } from 'react-native'
-import Icon from 'react-native-vector-icons/EvilIcons'
 import Search from '../Search'
 import Recipe from '../Recipe'
 import Favorites from '../Favorites'
