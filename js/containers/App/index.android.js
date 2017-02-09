@@ -1,23 +1,22 @@
 import React, { Component } from 'react'
 import { BackAndroid } from 'react-native'
 import { connect } from 'react-redux'
-import { addNavigationHelpers } from 'react-navigation'
 import {
+	addNavigationHelpers,
 	DrawerNavigator,
+	TabNavigator,
 	StackNavigator
 } from 'react-navigation'
+import {
+	Button
+} from 'react-native'
 import Search from '../Search'
 import Recipe from '../Recipe'
-import About from '../About'
+import Favorites from '../Favorites'
 
-export const AppNav= DrawerNavigator({
+export const AppNav= TabNavigator({
 	Search: {screen: Search},
-	About: {screen: About}
-},{
-	drawerPosition:'right',
-	contentOptions:{
-		activeTintColor:'#000'
-	}
+	Favorites: {screen: Favorites}
 })
 
 class NavContainer extends Component{
@@ -27,14 +26,18 @@ class NavContainer extends Component{
 			return true
 		})
 	}
+	render(){
+		return (<AppNav navigation={addNavigationHelpers({
+			dispatch: this.props.dispatch,
+			state: this.props.tab
+		})} />)
+	}
 }
 
-const Nav=connect(({tab})=>({tab}))((props)=>(
-	<AppNav navigation={addNavigationHelpers({
-		dispatch: props.dispatch,
-		state: props.tab
-	})} />
-))
+const Nav=connect(({tab})=>({tab}))(NavContainer)
+Nav.navigationOptions={
+	title:(props)=>{return 'Cook Ideas'},
+}
 
 export const RecipeNav=StackNavigator({
 	Home: {screen:Nav},
