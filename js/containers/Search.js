@@ -31,15 +31,19 @@ class Search extends Component{
 			)
 		}
 	}
-	constructor(props){
-		super(props)
-		this.state={searching:false,ingredientsInput:''}
+	state={
+		searching:false,
+		ingredientsLocked:false,
+		ingredientsInput:''
 	}
-	searchPressed(){
+	btnPressed(){
+		if (this.state.ingredientsLocked){
+			return this._textInput.clear()
+		}
 		this.setState({searching:true})
 		this.props.clearRecipes()
 		this.props.fetchRecipes(...this.state.ingredientsInput.split(',')).then(()=>{
-			this.setState({searching:false})
+			this.setState({searching:false,ingredientsLocked:true})
 		})
 		Keyboard.dismiss()
 	}
@@ -50,6 +54,7 @@ class Search extends Component{
 			(this.props.recipeCount) ? 
 			<Text style={styles.searchCount}>Return {this.props.recipeCount} recipes</Text> :
 			<Text style={styles.searchCount}>No recipes</Text>
+		const btn=this.state.ingredientsLocked ? <Icon name='close' size={24} color='#007aff' /> : <Icon name='search' size={24} color='#007aff' />
 		return (
 			<View style={styles.scene}>
 				<View style={styles.searchSection}>
@@ -59,12 +64,13 @@ class Search extends Component{
 						editable={true}
 						returnKeyType='search'
 						placeholder='Ingredients (comma delimited)'
-						onChangeText={(ingredientsInput)=>this.setState({ingredientsInput})}
-						onSubmitEditing={()=>this.searchPressed()}
+						ref={c=>this._textInput=c}
+						onChangeText={(ingredientsInput)=>this.setState({ingredientsInput,ingredientsLocked:false})}
+						onSubmitEditing={()=>this.btnPressed()}
 					/>
 					<View style={styles.searchButton}>
-					<TouchableHighlight onPress={()=>this.searchPressed()}>
-						<Icon name='search' size={24} color='#007aff' />
+					<TouchableHighlight onPress={()=>this.btnPressed()}>
+						{btn}
 					</TouchableHighlight>
 					</View>
 				</View>
