@@ -14,6 +14,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { ActionCreators } from '../actions'
+import RecipeRow from './RecipeRow'
 
 const ds = new ListView.DataSource({
 	rowHasChanged:(r1,r2)=>r1!==r2
@@ -79,38 +80,9 @@ class Search extends Component{
 					style={styles.scrollSection}
 					enableEmptySections={true}
 					dataSource={this.props.searchedRecipes}
-					renderRow={(row)=>{
-						const href=row.href
-						const idx=favorites.findIndex(function(recipe){return recipe.href===href})
-						const star=idx>-1 ?
-							<Icon name='star' size={24} color='orange' />:
-							<Icon name='star-o' size={24} color='grey' />
-						return (
-						<TouchableHighlight key={href} onPress={()=>{
-							this.props.navigation.navigate('Recipe',{recipe:row})
-						}}>
-							<View style={styles.result}>
-								<Image source={{uri:row.thumbnail}} style={styles.resultImage}/>
-								<View style={styles.resultInfo}>
-									<Text
-										style={styles.resultInfoTitle}
-										ellipsizeMode='tail'
-										numberOfLines={1}
-									>{row.title.trim()}</Text>
-									<Text
-										style={styles.resultInfoDesc}
-										ellipsizeMode='tail'
-										numberOfLines={1}
-									>{row.ingredients.trim()}</Text>
-								</View>
-								<View style={styles.resultFavorite}>
-								<TouchableWithoutFeedback onPress={()=>this.props.toggleFavorite(row)}>
-									{star}
-								</TouchableWithoutFeedback>
-								</View>
-							</View>
-						</TouchableHighlight>)
-					}}
+					renderRow={(row)=>(
+						<RecipeRow recipe={row} {...this.props} />
+					)}
 				/>
 			</View>
 		)
@@ -145,36 +117,6 @@ const styles= StyleSheet.create({
 		padding:10,
 		backgroundColor:'white',
 	},
-	result:{
-		flex:1,
-		flexDirection:'row',
-		paddingVertical:2
-	},
-	resultImage:{
-		width:120,
-		height:80,
-	},
-	resultFavorite:{
-		width:30,
-		height:80,
-		justifyContent:'center',
-		alignItems:'center'
-	},
-	resultInfo:{
-		flex:1,
-		flexShrink:1,
-		flexDirection:'column',
-		justifyContent: 'space-around',
-		padding:5
-	},
-	resultInfoTitle:{
-		color:'black',
-		height:20,
-	},
-	resultInfoDesc:{
-		color:'grey',
-		height:20,
-	}
 })
 
 export default connect(
