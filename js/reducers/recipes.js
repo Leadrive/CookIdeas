@@ -3,17 +3,17 @@ import * as types from '../actions/types'
 
 export const searchedRecipes= createReducer([],{
 	[types.SET_SEARCHED_RECIPES](state,action){
-		return action.recipes
+		return state.concat(action.recipes)
 	},
 	[types.CLEAR_RECIPES](state,action){
 		return []
 	}
 })
-export const recipeCount = createReducer(0,{
-	[types.SET_SEARCHED_RECIPES](state,action){
-		return action.recipes.length
+export const search = createReducer({ingredients:null,page:1,ended:false},{
+	[types.SET_SEARCH](state,action){
+		return Object.assign(action.search)
 	},
-	[types.CLEAR_RECIPES](state,action){
-		return 0
-	}
+	[types.SET_SEARCHED_RECIPES](state,action){
+		return Object.assign(state,{ended:!action.recipes.length})
+	},
 })

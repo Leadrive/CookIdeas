@@ -35,27 +35,32 @@ class Search extends Component{
 	state={
 		searching:false,
 		ingredientsLocked:false,
-		ingredientsInput:''
 	}
-	btnPressed(){
+	onBtnPressed(){
 		if (this.state.ingredientsLocked){
 			return this._textInput.clear()
 		}
 		this.setState({searching:true})
 		this.props.clearRecipes()
-		this.props.fetchRecipes(...this.state.ingredientsInput.split(',')).then(()=>{
+		this.props.fetchRecipes(this.props.search.ingredients,1).then(()=>{
 			this.setState({searching:false,ingredientsLocked:true})
 		})
 		Keyboard.dismiss()
+	}
+	onTextChanged(input){
+		this.props.setSearch({ingredients:input,page:1,ended:false})
+		this.setState({ingredientsLocked:false})
 	}
 	render(){
 		const favorites=this.props.favorites
 		const count=this.state.searching ? 
 			<Text style={styles.searchCount}>Searching...</Text> :
-			(this.props.recipeCount) ? 
-			<Text style={styles.searchCount}>Return {this.props.recipeCount} recipes</Text> :
+			(this.props.searchedRecipes.getRowCount()) ? 
+			<Text style={styles.searchCount}>Return {this.props.searchedRecipes.getRowCount()}++ recipes</Text> :
 			<Text style={styles.searchCount}>No recipes</Text>
-		const btn=this.state.ingredientsLocked ? <Icon name='close' size={24} color='#007aff' /> : <Icon name='search' size={24} color='#007aff' />
+		const btn=this.state.ingredientsLocked ? 
+			<Icon name='close' size={24} color='#007aff' /> : 
+			<Icon name='search' size={24} color='#007aff' />
 		return (
 			<View style={styles.scene}>
 				<View style={styles.searchSection}>
@@ -65,21 +70,29 @@ class Search extends Component{
 						editable={true}
 						returnKeyType='search'
 						placeholder='Ingredients (comma delimited)'
+						value={this.props.search.ingredients}
 						ref={c=>this._textInput=c}
-						onChangeText={(ingredientsInput)=>this.setState({ingredientsInput,ingredientsLocked:false})}
-						onSubmitEditing={()=>this.btnPressed()}
+						onChangeText={(input)=>this.onTextChanged(input)}
+						onSubmitEditing={()=>this.onBtnPressed()}
 					/>
 					<View style={styles.searchButton}>
-					<TouchableHighlight onPress={()=>this.btnPressed()}>
+					<TouchableHighlight onPress={()=>this.onBtnPressed()}>
 						{btn}
 					</TouchableHighlight>
 					</View>
 				</View>
 				<View style={styles.searchStatus}>{count}</View>
 				<ListView
+					ref={list=>this._listView=list}
 					style={styles.scrollSection}
 					enableEmptySections={true}
 					dataSource={this.props.searchedRecipes}
+					onEndReachedThreshold={0}
+					onEndReached={()=>{
+						const search=this.props.search
+						if (search.ended) return
+						this.props.fetchRecipes(search.ingredients,search.page+1)
+					}}
 					renderRow={(row)=>(
 						<RecipeRow recipe={row} {...this.props} />
 					)}
@@ -123,7 +136,7 @@ export default connect(
 	state=>({
 		searchedRecipes: ds.cloneWithRows(state.searchedRecipes),
 		favorites: state.favorites,
-		recipeCount: state.recipeCount
+		search: state.search
 	}),
 	dispatch=>( bindActionCreators(ActionCreators, dispatch) )
 )(Search)

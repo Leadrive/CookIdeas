@@ -1,18 +1,26 @@
 import * as types from './types'
 import Api from '../lib/api'
 
-export function fetchRecipes(...ingredients){
+export function fetchRecipes(ingredients,page=1){
 	return (dispatch, getState)=>{
-		const params=[
-			`i=${encodeURI(ingredients.join(','))}`,
-			'p=10'
-		].join('&')
+		dispatch(setSearch({ingredients,page}))
 
+		const params=[
+			`i=${encodeURI(ingredients)}`,
+			`p=${page}`
+		].join('&')
+console.log('$$$$$',params)
 		return Api.get(`/api?${params}`).then(results =>{
 			dispatch(setSearchedRecipes({recipes:results}))
 		}).catch((ex)=>{
 			console.error(ex)
 		})
+	}
+}
+export function setSearch(search){
+	return {
+		type: types.SET_SEARCH,
+		search
 	}
 }
 export function setSearchedRecipes({recipes}){
