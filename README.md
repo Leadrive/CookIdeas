@@ -6,7 +6,7 @@ Search by jalapeno, cilantro, -garlic. (Recipes with jalapenos and cilantro but 
 
 Please note: Cook Ideas is not affiliated with RecipePuppy in any way. Cook Ideas is a third-party RecipePuppy client
 
-[<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="Get it on Google Play" height="100">](https://play.google.com/store/apps/details?id=com.jasaws.cookideas)  [![](https://owncloud.org/wp-content/themes/owncloudorgnew/assets/img/clients/buttons/appstore.png)](https://itunes.apple.com/app/cookideas/id1203748827)
+[![](https://www.google.com/photos/about/static/images/badge_google_play_36dp.svg)](https://play.google.com/store/apps/details?id=com.jasaws.cookideas)[![](https://www.google.com/photos/about/static/images/badge_app_store_36dp.svg)](https://itunes.apple.com/app/cookideas/id1203748827)
 
 ## Technology
 Cook Ideas is a simple React Native application, the source code is here to help people learn following react libraries
@@ -21,13 +21,13 @@ Cook Ideas is a simple React Native application, the source code is here to help
 
 This project is based on Jon Lebensold's [youtube tutorial](https://www.youtube.com/playlist?list=PLk083BmAphjtGWyZUuo1BiCS_ZAgps6j5) with heavy modifications.
 ### Modifications
-* use react-navigation instead of NavigationExperimental
-* added favorites page
-* persistant storage
+* uses react-navigation instead of NavigationExperimental
 * uses ListView instead of ScrollView
-* implemented endless scroll
+* added favorites page
+* added persistant storage
 * added recipe detail view with WebView
-* UI Styling
+* implemented endless scroll
+* Different UI styling
 
 ## Found an improvement or bug?
 [Report it](https://github.com/ldarren/CookIdeas/issues)
